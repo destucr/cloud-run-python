@@ -1,9 +1,19 @@
+# Use the official Python slim image
 FROM python:3.9-slim
 
-WORKDIR /app
+# Set environment variables
+ENV PYTHONUNBUFFERED True
+ENV APP_HOME /app
+ENV PORT 8080
 
-COPY . /app
+# Create the working directory
+WORKDIR $APP_HOME
 
-RUN pip install --no-cache-dir flask gunicorn
+# Copy application files
+COPY . .
 
-CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 "app:create_app()"   
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Start the application with Gunicorn
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 "app:app"
