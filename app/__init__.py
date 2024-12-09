@@ -3,8 +3,8 @@ from flask import Flask
 def create_app():
     app = Flask(__name__)
 
-    # Import and register routes
-    with app.app_context():
+    @app.before_request
+    def startup():
         from .routes import api_blueprint
         app.register_blueprint(api_blueprint)
 
